@@ -2,6 +2,10 @@
 
 let
   nixpkgs = import sources.nixpkgs {} ;
-  blog = nixpkgs.pkgs.haskellPackages.callPackage ./default.nix {} ;
+  hpkgs = nixpkgs.pkgs.haskellPackages.override {
+    overrides = self: super: {
+      blog = self.callPackage ./default.nix {} ;
+    };
+  };
 
-in blog
+in hpkgs.blog
