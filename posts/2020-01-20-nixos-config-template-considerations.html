@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My Hakyll Blog - NixOS config template considerations</title>
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">My Hakyll Blog</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>NixOS config template considerations</h1>
+            <article>
+    <section class="header">
+        Posted on January 20, 2020
+        
+    </section>
+    <section>
+        <h1 id="problems-to-solve-and-solutions">Problems to solve and solutions</h1>
+<p>Here is the summary of responses on both threads</p>
+<p><a href="https://discourse.nixos.org/t/any-default-config-for-reproducible-configurations/5268">Discource</a> and <a href="https://www.reddit.com/r/NixOS/comments/eihw31/any_default_config_for_reproducible_configurations/">Reddit</a></p>
+<h2 id="pinning-the-base-nixpkgs-versions">Pinning the base nixpkgs versions</h2>
+<h3 id="use-niv">Use niv</h3>
+<ul>
+<li>Pros
+<ul>
+<li>Generates boilerplate code to working without the <code>nixpkgs</code>. Can be used to pin the base <code>nixpkgs</code>.</li>
+<li>Can update itself</li>
+<li>Can update all external dependencies in one command.</li>
+<li>Works like <code>nix-prefetch-*</code> command, so the sources are distributed via the nix store, which is more efficient and fast than <code>git submodule</code> method</li>
+<li>No need for the <code>niv</code> binary on evaluation (and build) stage. The generated nix code is independent from the <code>niv</code>.</li>
+<li>Written in Haskell. Contains less bugs.</li>
+</ul></li>
+<li>Cons
+<ul>
+<li><code>niv</code> is not in the <code>nixpkgs</code></li>
+<li>Works with only GitHub dependencies. Raw <code>git</code> support marked as experimental.</li>
+<li>New software. May be unstable.</li>
+<li>Written in Haskell. Will pull some dependencies and have long compilation time.</li>
+</ul></li>
+</ul>
+<h3 id="use-flakes">Use flakes</h3>
+<ul>
+<li>Pros
+<ul>
+<li>Modularity and coposability of the flakes</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>Very experimental and raw for now. May require patched <code>nix</code></li>
+<li>Requires all parts of your configuration to be flakes</li>
+</ul></li>
+</ul>
+<h3 id="use-git-submodule-to-pin-specific-commit-of-nixpkgs">Use git submodule to pin specific commit of nixpkgs</h3>
+<ul>
+<li>Pros
+<ul>
+<li>No need to use nix expressions to manage pinned version</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>Conflicts resolution in git submodules is a mess</li>
+<li>Slow submodule update. Especially when last update was long time ago.</li>
+</ul></li>
+</ul>
+<h2 id="pinning-secondary-nixpgs-versionsoverlayssource-treesother-external-repositories">Pinning secondary nixpgs versions/overlays/source trees/other external repositories</h2>
+<h3 id="use-niv-1">Use niv</h3>
+<p>Same as previous</p>
+<h3 id="use-flakes-1">Use flakes</h3>
+<p>Same as previous</p>
+<h3 id="fetchfromgithub">fetchFromGitHub</h3>
+<ul>
+<li>Pros
+<ul>
+<li>Simple enough</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>Needs some directory with .json files results of <code>nix-prefetch-github</code></li>
+<li>Mess in the code like</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode nix"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="ex">nixpkgsUnstablePath</span> = self.fetchFromGitHub (</a>
+<a class="sourceLine" id="cb1-2" title="2">  <span class="ex">lib.importJSON</span> ./nixpkgs-unstable.json</a>
+<a class="sourceLine" id="cb1-3" title="3">) ;</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="ex">nixpkgsUnstable</span> = import nixpkgsUnstablePath {</a>
+<a class="sourceLine" id="cb1-5" title="5">  <span class="ex">config</span> = self.config<span class="kw">;</span></a>
+<a class="sourceLine" id="cb1-6" title="6">} ;</a></code></pre></div>
+<ul>
+<li>Manual updating each dependency with commands like</li>
+</ul>
+<pre class="shell"><code>git log -n1 --format=&quot;%H&quot; channels/nixos-unstable
+nix-prefetch-github NixOS nixpkgs-channels --rev e4134747f5666bcab8680aff67fa3b63384f9a0f &gt; nixpkgs-unstable.json</code></pre>
+not very convenient</li>
+</ul>
+<h2 id="multiple-machines-configuration">Multiple machines configuration</h2>
+<h3 id="use-imports-section">Use imports section</h3>
+<p>Create some top-level files like <code>host1.nix</code>, <code>host2.nix</code> with <code>imports</code> section, like</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode nix"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" title="1">  <span class="ex">imports</span> =</a>
+<a class="sourceLine" id="cb3-2" title="2">    [ <span class="ex">./hostX/hardware-configuration.nix</span></a>
+<a class="sourceLine" id="cb3-3" title="3">      <span class="ex">./some-configuration.nix</span></a>
+<a class="sourceLine" id="cb3-4" title="4">      <span class="ex">./user-packages</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    ];</a></code></pre></div>
+<p>Create symlink on each machine pointing to specific <code>hostX.nix</code> file.</p>
+<p>Update the system with <code>nixos-rebuild switch</code></p>
+<ul>
+<li>Pros
+<ul>
+<li>Simple and inspectable.</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>Need to support manual imports</li>
+<li>Possible code mess</li>
+</ul></li>
+</ul>
+<h4 id="improvement">Improvement</h4>
+<p>May be improved by structured files tree. Like</p>
+<pre class="text"><code>.
+├── configuration.nix -&gt; hosts/host1/default.nix
+├── hosts
+│   ├── host1
+│   │   ├── default.nix
+│   │   ├── hardware-configuration.nix
+│   │   └── users
+│   │       └── user1.nix
+│   └── host2
+│       ├── default.nix
+│       ├── hardware-configuration.nix
+│       └── overlays
+│           └── default.nix
+├── overlays
+│   ├── default.nix
+│   ├── overlay1
+│   │   └── default.nix
+│   └── overlay2
+│       └── default.nix
+├── shared
+│   ├── default.nix
+│   └── package-sets.nix
+└── users
+    ├── default.nix
+    ├── user1.nix
+    └── user2.nix</code></pre>
+<p>So the <code>imports</code> section of each <code>hosts/hostX/default.nix</code> may look like</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode nix"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" title="1">  <span class="ex">imports</span> =</a>
+<a class="sourceLine" id="cb5-2" title="2">    [ <span class="ex">./hardware-configuration.nix</span></a>
+<a class="sourceLine" id="cb5-3" title="3">      <span class="ex">./users</span></a>
+<a class="sourceLine" id="cb5-4" title="4">      <span class="ex">../../overlays</span></a>
+<a class="sourceLine" id="cb5-5" title="5">      <span class="ex">../../users</span></a>
+<a class="sourceLine" id="cb5-6" title="6">      <span class="ex">../../shared</span></a>
+<a class="sourceLine" id="cb5-7" title="7">    ];</a></code></pre></div>
+<h3 id="use-modules">Use modules</h3>
+<p>To be honest, I did not find any pros comparing to previous one.</p>
+<h2 id="managing-secrets">Managing secrets</h2>
+<h3 id="git-crypt">git-crypt</h3>
+<ul>
+<li>Pros
+<ul>
+<li>Claimed to be secure</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>May conflict with some ways of editing the config files</li>
+</ul></li>
+</ul>
+<h3 id="manual-copying-the-secrets-to-each-machine">Manual copying the secrets to each machine</h3>
+<ul>
+<li>Cons
+<ul>
+<li>No way for centralized secret management</li>
+</ul></li>
+</ul>
+<h2 id="editing-the-config-files">Editing the config files</h2>
+<p>The question is how to edit files in the <code>/etc/nixos</code>. The files are managed with <code>git</code> but you still need to push it to the github (and so have keys loaded in your ssh agent or enter password every time). Also editing files as root is not very convenient and secure in case of GUI editors.</p>
+<h3 id="edit-directly-as-root-user-with-vimnano">Edit directly as root user with vim/nano</h3>
+<ul>
+<li>Pros
+<ul>
+<li>Simple</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>the root user usually dont have convenient dev tools in it’s environment (and must do not)</li>
+</ul></li>
+</ul>
+<h3 id="have-a-copy-of-the-repository-in-a-home-of-user">Have a copy of the repository in a home of user</h3>
+<p>First you have some copy of your config somewhere in <code>/home/user/nixos-config</code> in which you make some changes, test them with <code>nixos-rebuild build</code> and commit.</p>
+<p>Then, in the <code>/etc/nixos</code> repository have setting like</p>
+<pre><code>git remote add local file:///home/user/nixos-config</code></pre>
+<p>And fetch all changes into the root repository with <code>git pull</code> from the user’s copy</p>
+<p>then <code>nixos-rebuild switch</code> as root user</p>
+<ul>
+<li>Pros
+<ul>
+<li>May store secrets in unencrypted form in only the <code>/etc/nixos</code></li>
+<li>No posibility to change system configuration as unprivileged user</li>
+</ul></li>
+<li>Cons
+<ul>
+<li>Excess copy-paste actions (which may be automated with scripts)</li>
+<li>Excess space (and time to pull) for the <code>nixpkgs</code> submodule (if you use this way of pinning)</li>
+</ul></li>
+</ul>
+<h3 id="symlink-to-folder-in-a-users-home">Symlink to folder in a user’s home</h3>
+<h2 id="managing-the-home-folder">Managing the home folder</h2>
+<p>Should be optional to use home-manager</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
