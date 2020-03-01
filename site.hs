@@ -16,6 +16,10 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    match "vendor/highlight.pack.js" $ do
+      route $ constRoute "hightlight.js"
+      compile copyFileCompiler
+
     match (fromList ["about.markdown", "projects.markdown"]) $ do
         route   $ setExtension "html"
         compile $ myPandocCompiler

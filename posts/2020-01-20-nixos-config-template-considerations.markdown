@@ -3,9 +3,6 @@ title: NixOS config template considerations
 ---
 
 
-
-# Problems to solve and solutions
-
 Here is the summary of responses on both threads
 
 [Discource](https://discourse.nixos.org/t/any-default-config-for-reproducible-configurations/5268)
@@ -74,22 +71,22 @@ Same as previous
   * Needs some directory with .json files results of `nix-prefetch-github`
   * Mess in the code like
 
-  ```nix
-  nixpkgsUnstablePath = self.fetchFromGitHub (
-    lib.importJSON ./nixpkgs-unstable.json
-  ) ;
-  nixpkgsUnstable = import nixpkgsUnstablePath {
-    config = self.config;
-  } ;
+      ```nix
+      nixpkgsUnstablePath = self.fetchFromGitHub (
+        lib.importJSON ./nixpkgs-unstable.json
+      ) ;
+      nixpkgsUnstable = import nixpkgsUnstablePath {
+        config = self.config;
+      } ;
 
-  ```
+      ```
 
   * Manual updating each dependency with commands like
 
-  ```shell
-  git log -n1 --format="%H" channels/nixos-unstable
-  nix-prefetch-github NixOS nixpkgs-channels --rev e4134747f5666bcab8680aff67fa3b63384f9a0f > nixpkgs-unstable.json
-  ```
+      ```shell
+      git log -n1 --format="%H" channels/nixos-unstable
+      nix-prefetch-github NixOS nixpkgs-channels --rev e4134747f5666bcab8680aff67fa3b63384f9a0f > nixpkgs-unstable.json
+      ```
 
   not very convenient
 
@@ -195,7 +192,7 @@ editors.
   * Simple
 
 * Cons
-  * the root user usually dont have convenient dev tools in it's
+  * The root user usually dont have convenient dev tools in it's
     environment (and must do not)
 
 ### Have a copy of the repository in a home of user

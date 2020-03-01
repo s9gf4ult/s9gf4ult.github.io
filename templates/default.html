@@ -8,27 +8,31 @@
         <link rel="stylesheet" href="/css/default.css" />
         <link rel="stylesheet" href="/css/pandoc.css"/>
         <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/default.min.css">
+        <!-- <script src="/hightlight.js"> -->
     </head>
-    <body class="main main_style">
-      <div class="main__part header">
-        <a href="/index.html" class="header__link header__link_style">
-          Main
-        </a>
-        <a href="/projects.html" class="header__link header__link_style">
-          Projects
-        </a>
-        <a href="/drafts.html" class="header__link header__link_style">
-          Drafts
-        </a>
-        <a href="/about.html" class="header__link header__link_style">
-          About
-        </a>
-      </div>
-      <div class="main__part">
-        <h1>$title$</h1>
-      </div>
-      <div class="main__part content">
-        $body$
+    <body class="sizer">
+      <div class="sizer__elem content">
+        <div class="content__elem header">
+          <a class="header__button button" href="/index.html">
+            <div class="button__text">Posts</div>
+          </a>
+          <a class="header__button button" href="/projects.html">
+            <div class="button__text">Projects</div>
+          </a>
+          <a class="header__button button" href="/drafts.html">
+            <div class="button__text">Drafts</div>
+          </a>
+          <a class="header__button button" href="/about.html">
+            <div class="button__text">About</div>
+          </a>
+        </div>
+        <div class="content__elem content__elem_title">
+          <h1>$title$</h1>
+        </div>
+        <div class="content__elem">
+          $body$
+        </div>
       </div>
     </body>
 </html>
