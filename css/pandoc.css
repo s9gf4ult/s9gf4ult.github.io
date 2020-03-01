@@ -1,24 +1,12 @@
 
-
 code {
     font-family: Hack;
-}
-
-code .kw {
-    color: red;
-}
-
-code .dt {
-    color: green;
-}
-
-code {
-  display: inline-block;
-  white-space: pre-wrap;
-  background-color: #E6E6E6;
-  border: dotted green 2px;
-  padding-left: 0.3em;
-  padding-right: 0.3em;
-  padding-bottom: 0.1em;
-  padding-top: 0.1em;
+    display: inline-block;
+    white-space: pre-wrap;
+    background-color: #E6E6E6;
+    border: dotted green 2px;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
 }
