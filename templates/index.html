@@ -1,5 +1,11 @@
-<div class="vlist">
-  $for(posts)$
-  <a href="$url$" class="vlist__item">$title$</a>
-  $endfor$
-</div>
+<table>
+  <tbody>
+    $for(posts)$
+    <tr>
+      <td>
+        <a href="$url$">$title$</a>
+      </td>
+    </tr>
+    $endfor$
+  </tbody>
+</table>

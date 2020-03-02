@@ -1,5 +1,5 @@
 body {
-    font-family: liberation-sans, sans-serif;
+    font-family: DejaVu Sans, sans-serif;
     font-weight: 400;
     font-size: 16px;
     font-style: normal;
@@ -8,14 +8,6 @@ body {
 code {
     font-family: Hack;
     font-size: 16px;
-    display: inline-block;
-    white-space: pre-wrap;
-    background-color: #E6E6E6;
-    border: dotted green 2px;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
-    padding-bottom: 0.1em;
-    padding-top: 0.1em;
 }
 
 h1 {

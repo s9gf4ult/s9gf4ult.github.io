@@ -16,9 +16,9 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
-    match "vendor/highlight.pack.js" $ do
-      route $ constRoute "hightlight.js"
-      compile copyFileCompiler
+    -- match "vendor/highlight.pack.js" $ do
+    --   route $ constRoute "hightlight.js"
+    --   compile copyFileCompiler
 
     match (fromList ["about.markdown", "projects.markdown"]) $ do
         route   $ setExtension "html"
@@ -53,7 +53,7 @@ main = hakyll $ do
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
+    dateField "date" "%Y-%m-%d" `mappend`
     defaultContext
 
 myPandocCompiler :: Compiler (Item String)

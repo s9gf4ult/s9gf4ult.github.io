@@ -30,8 +30,23 @@ body {
     min-height: 100vh ;
 }
 
+code {
+    display: inline-block;
+    white-space: pre-wrap;
+    background-color: #E6E6E6;
+    border: dotted green 2px;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
+}
+
 h1 {
     margin-bottom: 0;
+}
+
+h1, h2, h3, h4 {
+    color: green;
 }
 
 /***********/
