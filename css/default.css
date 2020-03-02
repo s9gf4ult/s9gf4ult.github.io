@@ -13,7 +13,6 @@ body {
 body {
     color: #303030;
     background-color: #F0F0F0;
-    font-fmaily: Sans;
 }
 
 @media screen and (min-width: 768px) {
@@ -72,10 +71,10 @@ h1 {
 /**********/
 
 .button {
-    background-color: #ACD4AC;
-    font-family: monospace;
-    font-size: 200%;
-    border: dotted green 2px;
+    background-color: #C7C7C7;
+    box-shadow: -3px 3px #ABABAB, -2px 2px #ABABAB, -1px 1px #ABABAB;
+    border-top: 1px solid #E3E3E3;
+    border-right: 1px solid #E3E3E3;
 }
 
 .button:link {

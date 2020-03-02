@@ -4,7 +4,6 @@ title: S.P.Q.R.
 
 
 ```haskell
-
 data Test a = Test Int
     deriving Generic
 ```
