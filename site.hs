@@ -60,6 +60,9 @@ myPandocCompiler :: Compiler (Item String)
 myPandocCompiler = pandocCompilerWith r w
   where
     r = defaultHakyllReaderOptions
-    w = defaultHakyllWriterOptions {
-      writerHighlightStyle = Just pygments
+    w = defaultHakyllWriterOptions
+      { writerHighlightStyle = Just pygments
+      , writerTableOfContents = True
+      , writerTOCDepth = 2
+      , writerTemplate = Just "Contents\n$toc$\n$body$"
       }
