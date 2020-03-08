@@ -63,6 +63,6 @@ myPandocCompiler = pandocCompilerWith r w
     w = defaultHakyllWriterOptions
       { writerHighlightStyle = Just pygments
       , writerTableOfContents = True
-      , writerTOCDepth = 2
+      , writerTOCDepth = 3
       , writerTemplate = Just "Contents\n$toc$\n$body$"
       }

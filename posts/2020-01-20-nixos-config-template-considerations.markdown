@@ -97,7 +97,7 @@ Same as previous
 Create some top-level files like `host1.nix`, `host2.nix`
 with `imports` section, like
 
-``` nix
+```nix
   imports =
     [ ./hostX/hardware-configuration.nix
       ./some-configuration.nix
@@ -120,7 +120,7 @@ Update the system with `nixos-rebuild switch`
 
 May be improved by structured files tree. Like
 
-``` text
+```text
 .
 ├── configuration.nix -> hosts/host1/default.nix
 ├── hosts
@@ -203,7 +203,7 @@ with `nixos-rebuild build` and commit.
 
 Then, in the `/etc/nixos` repository have setting like
 
-```
+```shell
 git remote add local file:///home/user/nixos-config
 ```
 
