@@ -1,13 +1,13 @@
 body {
     font-family: DejaVu Sans, sans-serif;
     font-weight: 400;
-    font-size: 14pt;
+    font-size: 12pt;
     font-style: normal;
 }
 
 code {
     font-family: Hack;
-    font-size: 14pt;
+    font-size: 12pt;
 }
 
 h1 {
@@ -16,6 +16,10 @@ h1 {
 
 h2 {
     font-size: 18pt;
+}
+
+h3 {
+    font-size: 16pt;
 }
 
 .button {

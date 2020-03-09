@@ -1,5 +1,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
+import           Control.Lens             hiding (Context (..))
+import           Data.Maybe
 import           Data.Monoid
 import           Hakyll
 import           Text.Pandoc.Highlighting (pygments)
@@ -57,12 +59,19 @@ postCtx =
     defaultContext
 
 myPandocCompiler :: Compiler (Item String)
-myPandocCompiler = pandocCompilerWith r w
-  where
+myPandocCompiler = do
+  ident <- getUnderlying
+  toc   <- isJust <$> getMetadataField ident "withtoc"
+  tocd <- (preview $ _Just . _Show) <$> getMetadataField ident "tocdepth"
+  let
     r = defaultHakyllReaderOptions
     w = defaultHakyllWriterOptions
       { writerHighlightStyle = Just pygments
-      , writerTableOfContents = True
-      , writerTOCDepth = 3
-      , writerTemplate = Just "Contents\n$toc$\n$body$"
+      , writerTableOfContents = toc
+      , writerTOCDepth = fromMaybe 3 tocd
+      , writerTemplate = Just $ if toc
+        then  "<div class=\"post__toc\">\n$toc$\n</div>\n\
+              \<div class=\"post__body\">\n$body$\n"
+        else "<div class=\"post__body\">\n$body$\n"
       }
+  pandocCompilerWith r w

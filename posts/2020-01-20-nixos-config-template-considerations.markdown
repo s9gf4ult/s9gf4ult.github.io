@@ -1,5 +1,7 @@
 ---
 title: NixOS config template considerations
+withtoc: true
+tocdepth: 2
 ---
 
 
@@ -9,9 +11,9 @@ Here is the summary of responses on both threads
 and
 [Reddit](https://www.reddit.com/r/NixOS/comments/eihw31/any_default_config_for_reproducible_configurations/)
 
-## Pinning the base nixpkgs versions
+# Pinning the base nixpkgs versions
 
-### Use niv
+## Use niv
 
 * Pros
   * Generates boilerplate code to working without the `nixpkgs`. Can
@@ -33,7 +35,7 @@ and
   * Written in Haskell. Will pull some dependencies and have long
     compilation time.
 
-### Use flakes
+## Use flakes
 
 * Pros
   * Modularity and coposability of the flakes
@@ -42,7 +44,7 @@ and
   * Very experimental and raw for now. May require patched `nix`
   * Requires all parts of your configuration to be flakes
 
-### Use git submodule to pin specific commit of nixpkgs
+## Use git submodule to pin specific commit of nixpkgs
 
 * Pros
   * No need to use nix expressions to manage pinned version
@@ -52,17 +54,17 @@ and
   * Slow submodule update. Especially when last update was long time
     ago.
 
-## Pinning secondary nixpgs versions/overlays/source trees/other external repositories
+# Pinning secondary nixpgs versions/overlays/source trees/other external repositories
 
-### Use niv
-
-Same as previous
-
-### Use flakes
+## Use niv
 
 Same as previous
 
-### fetchFromGitHub
+## Use flakes
+
+Same as previous
+
+## fetchFromGitHub
 
 * Pros
   * Simple enough
@@ -90,9 +92,9 @@ Same as previous
 
   not very convenient
 
-## Multiple machines configuration
+# Multiple machines configuration
 
-### Use imports section
+## Use imports section
 
 Create some top-level files like `host1.nix`, `host2.nix`
 with `imports` section, like
@@ -116,7 +118,7 @@ Update the system with `nixos-rebuild switch`
   * Need to support manual imports
   * Possible code mess
 
-#### Improvement
+### Improvement
 
 May be improved by structured files tree. Like
 
@@ -161,24 +163,24 @@ So the `imports` section of each `hosts/hostX/default.nix` may look like
     ];
 ```
 
-### Use modules
+## Use modules
 
 To be honest, I did not find any pros comparing to previous one.
 
-## Managing secrets
-### git-crypt
+# Managing secrets
+## git-crypt
 
 * Pros
   * Claimed to be secure
 * Cons
   * May conflict with some ways of editing the config files
 
-### Manual copying the secrets to each machine
+## Manual copying the secrets to each machine
 
 * Cons
   * No way for centralized secret management
 
-## Editing the config files
+# Editing the config files
 
 The question is how to edit files in the `/etc/nixos`. The files are
 managed with `git` but you still need to push it to the github (and so
@@ -186,7 +188,7 @@ have keys loaded in your ssh agent or enter password every time). Also
 editing files as root is not very convenient and secure in case of GUI
 editors.
 
-### Edit directly as root user with vim/nano
+## Edit directly as root user with vim/nano
 
 * Pros
   * Simple
@@ -195,7 +197,7 @@ editors.
   * The root user usually dont have convenient dev tools in it's
     environment (and must do not)
 
-### Have a copy of the repository in a home of user
+## Have a copy of the repository in a home of user
 
 First you have some copy of your config somewhere in
 `/home/user/nixos-config` in which you make some changes, test them
@@ -221,7 +223,7 @@ then `nixos-rebuild switch` as root user
   * Excess space (and time to pull) for the `nixpkgs` submodule (if
     you use this way of pinning)
 
-### Symlink to folder in a user's home
-## Managing the home folder
+## Symlink to folder in a user's home
+# Managing the home folder
 
 Should be optional to use home-manager
