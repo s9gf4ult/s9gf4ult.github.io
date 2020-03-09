@@ -1,7 +1,7 @@
 ---
 title: NixOS config template considerations
 withtoc: true
-tocdepth: 2
+tocdepth: 3
 ---
 
 
