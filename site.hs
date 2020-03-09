@@ -70,7 +70,7 @@ myPandocCompiler = do
       , writerTableOfContents = toc
       , writerTOCDepth = fromMaybe 3 tocd
       , writerTemplate = Just $ if toc
-        then  "<div class=\"post__toc\">\n$toc$\n</div>\n\
+        then  "<div class=\"post__toc toc\">\n$toc$\n</div>\n\
               \<div class=\"post__body\">\n$body$\n"
         else "<div class=\"post__body\">\n$body$\n"
       }

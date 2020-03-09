@@ -107,3 +107,32 @@ h1, h2, h3, h4 {
     margin-bottom: auto;
     text-decoration: none;
 }
+
+
+/********/
+/* toc  */
+/********/
+
+
+.toc a:link, .toc a:visited {
+    text-decoration: none;
+}
+
+.toc li {
+    list-style-type: none;
+    line-height: 1.1em;
+}
+
+.toc {
+    background-color: #E6E6E6;
+    border: dotted green 2px;
+    padding: 0.7em;
+}
+
+.toc > ul{
+    margin: 0px;
+}
+
+.post__toc {
+    display: inline-block;
+}

@@ -11,7 +11,9 @@ code {
 }
 
 h1 {
-    font-size: 20pt;
+    font-size: 18pt;
+    /* text-decoration: underline; */
+    border-bottom: 1px solid black;
 }
 
 h2 {
