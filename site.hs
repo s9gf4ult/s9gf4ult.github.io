@@ -18,11 +18,7 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
-    -- match "vendor/highlight.pack.js" $ do
-    --   route $ constRoute "hightlight.js"
-    --   compile copyFileCompiler
-
-    match (fromList ["about.markdown", "projects.markdown"]) $ do
+    match (fromList ["about.markdown"]) $ do
         route   $ setExtension "html"
         compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
@@ -38,10 +34,9 @@ main = hakyll $ do
     create ["index.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<< loadAll "posts/*"
             let
               ctx
-                =  listField "posts" postCtx (pure posts)
+                =  listField "posts" postCtx (recentFirst =<< loadAll "posts/*")
                 <> constField "title" "Posts"
                 <> defaultContext
             makeItem ""

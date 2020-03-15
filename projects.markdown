@@ -1,5 +1,0 @@
----
-title: Projects list
----
-
-Ahaha

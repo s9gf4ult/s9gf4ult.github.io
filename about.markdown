@@ -2,5 +2,6 @@
 title: About
 ---
 
-This is my text storage. I am planning to write some abstracts abouth
-things I know and/or thinking of.
+* [Github](https://github.com/s9gf4ult)
+* [Hackage](https://hackage.haskell.org/user/AlekseyUymanov)
+* Interested in: [haskell](https://www.haskell.org), [NixOS](https://nixos.org)
