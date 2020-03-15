@@ -64,6 +64,15 @@ h1, h2, h3, h4 {
     color: green;
 }
 
+.content__elem_right {
+    display: flex;
+    justify-content: end;
+}
+
+.language-changer a:link {
+    text-decoration: none;
+}
+
 /**********/
 /* header */
 /**********/

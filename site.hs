@@ -22,34 +22,37 @@ main = hakyll $ do
     --   route $ constRoute "hightlight.js"
     --   compile copyFileCompiler
 
-    match (fromList ["about.markdown", "projects.markdown"]) $ do
-        route   $ setExtension "html"
-        compile $ myPandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
+    for ["en"] \lang -> do
+      match (fromList ["about.markdown", "projects.markdown"]) $ do
+          route   $ setExtension "html"
+          compile $ myPandocCompiler
+              >>= loadAndApplyTemplate "templates/default.html" defaultContext
+              >>= relativizeUrls
 
-    match "posts/*" $ do
-        route $ setExtension "html"
-        compile $ myPandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
-            >>= relativizeUrls
+      match "posts/*" $ do
+          route $ setExtension "html"
+          compile $ myPandocCompiler
+              >>= loadAndApplyTemplate "templates/post.html"    postCtx
+              >>= loadAndApplyTemplate "templates/en.html" postCtx
+              >>= loadAndApplyTemplate "templates/default.html" postCtx
+              >>= relativizeUrls
 
-    create ["index.html"] $ do
-        route idRoute
-        compile $ do
-            posts <- recentFirst =<< loadAll "posts/*"
-            let
-              ctx
-                =  listField "posts" postCtx (pure posts)
-                <> constField "title" "Posts"
-                <> defaultContext
-            makeItem ""
-                >>= loadAndApplyTemplate "templates/index.html" ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
+      create ["en/index.html"] $ do
+          route idRoute
+          compile $ do
+              posts <- recentFirst =<< loadAll "posts/*"
+              let
+                ctx
+                  =  listField "posts" postCtx (pure posts)
+                  <> constField "title" "Posts"
+                  <> defaultContext
+              makeItem ""
+                  >>= loadAndApplyTemplate "templates/index.html" ctx
+                  >>= loadAndApplyTemplate "templates/en.html" ctx
+                  >>= loadAndApplyTemplate "templates/default.html" ctx
+                  >>= relativizeUrls
 
-    match "templates/*" $ compile templateBodyCompiler
+      match "templates/*" $ compile templateBodyCompiler
 
 
 --------------------------------------------------------------------------------
