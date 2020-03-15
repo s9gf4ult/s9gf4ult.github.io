@@ -43,6 +43,7 @@ code {
 
 h1 {
     margin-bottom: 0;
+    border-bottom: 1px solid black;
 }
 
 h1, h2, h3, h4 {
@@ -131,6 +132,7 @@ h1, h2, h3, h4 {
 
 .toc > ul{
     margin: 0px;
+    padding: 0px;
 }
 
 .post__toc {
