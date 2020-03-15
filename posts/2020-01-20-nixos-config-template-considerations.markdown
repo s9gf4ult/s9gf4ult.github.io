@@ -2,6 +2,7 @@
 title: NixOS config template considerations
 withtoc: true
 tocdepth: 3
+tags: nixos
 ---
 
 

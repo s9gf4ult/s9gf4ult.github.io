@@ -16,13 +16,18 @@
           <a class="header__button button" href="/index.html">
             <div class="button__text">Posts</div>
           </a>
+          <a class="header__button button" href="/tags.html">
+            <div class="button__text">Tags</div>
+          </a>
           <a class="header__button button" href="/about.html">
             <div class="button__text">About</div>
           </a>
         </div>
+        $if(title)$
         <div class="content__elem content__elem_title">
           <h1>$title$</h1>
         </div>
+        $endif$
         <div class="content__elem">
           $body$
         </div>

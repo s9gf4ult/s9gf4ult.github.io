@@ -1,11 +1,5 @@
-<table>
-  <tbody>
-    $for(posts)$
-    <tr>
-      <td>
-        <a href="$url$">$title$</a>
-      </td>
-    </tr>
-    $endfor$
-  </tbody>
-</table>
+$for(posts)$
+<a href="$url$">$title$</a> ($date$) [$tags$]
+$sep$
+<br/>
+$endfor$
