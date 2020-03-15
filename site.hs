@@ -26,27 +26,16 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+
+    -- The about static page
     match (fromList ["about.markdown"]) $ do
         route   $ setExtension "html"
         compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
-    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
-
-    tagsRules tags $ \tag pt -> do
-      route idRoute
-      compile $ do
-        let
-          title = "Tag: " <> tag
-          ctx = constField "title" title
-            <> listField "posts" (postCtx tags) (recentFirst =<< loadAll pt)
-            <> defaultContext
-        makeItem ""
-          >>= loadAndApplyTemplate "templates/index.html" ctx
-          >>= loadAndApplyTemplate "templates/default.html" ctx
-          >>= relativizeUrls
-
+    -- The index page and page with posts list
     create ["index.html"] $ do
       route idRoute
       compile $ do
@@ -60,6 +49,21 @@ main = hakyll $ do
           >>= loadAndApplyTemplate "templates/default.html" ctx
           >>= relativizeUrls
 
+    -- Tag pages. One page for each tag to list posts for each tag
+    tagsRules tags $ \tag pt -> do
+      route idRoute
+      compile $ do
+        let
+          title = "Tag: " <> tag
+          ctx = constField "title" title
+            <> listField "posts" (postCtx tags) (recentFirst =<< loadAll pt)
+            <> defaultContext
+        makeItem ""
+          >>= loadAndApplyTemplate "templates/index.html" ctx
+          >>= loadAndApplyTemplate "templates/default.html" ctx
+          >>= relativizeUrls
+
+    -- The main page with tags list
     create [ "tags.html" ] $ do
       route idRoute
       compile $ do
@@ -81,13 +85,13 @@ main = hakyll $ do
           >>= loadAndApplyTemplate "templates/default.html" ctx
           >>= relativizeUrls
 
+    -- Render posts
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    (postCtx tags)
             >>= loadAndApplyTemplate "templates/default.html" (postCtx tags)
             >>= relativizeUrls
-
 
     match "templates/*" $ compile templateBodyCompiler
 
