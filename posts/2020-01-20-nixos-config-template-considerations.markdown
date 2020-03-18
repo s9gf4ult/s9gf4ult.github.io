@@ -14,10 +14,14 @@ and
 
 # Pinning the base nixpkgs versions
 
+The question is how to pin specific version in the NixOS config for reproducability.
+
 ## Use niv
 
+Handle NixOS config just like usual [niv](https://github.com/nmattia/niv) project
+
 * Pros
-  * Generates boilerplate code to working without the `nixpkgs`. Can
+  * Generates boilerplate code for working without the `nixpkgs`. Can
     be used to pin the base `nixpkgs`.
   * Can update itself
   * Can update all external dependencies in one command.
@@ -47,6 +51,9 @@ and
 
 ## Use git submodule to pin specific commit of nixpkgs
 
+Fetch whole `nixpkgs` as git submodule and pin a commit hash in the
+config repository
+
 * Pros
   * No need to use nix expressions to manage pinned version
 
@@ -59,13 +66,17 @@ and
 
 ## Use niv
 
-Same as previous
+Same as previous. Preferred way if main nixpkgs is already under `niv`
+management.
 
 ## Use flakes
 
-Same as previous
+Same as previous. Preferred way if main nixpkgs is already under
+`flakes` management.
 
 ## fetchFromGitHub
+
+Use the program `nix-prefetch-github` to prefetch the secondary
 
 * Pros
   * Simple enough
