@@ -106,7 +106,7 @@ postCtx tags
 myPandocCompiler :: Compiler (Item String)
 myPandocCompiler = do
   ident <- getUnderlying
-  toc   <- isJust <$> getMetadataField ident "withtoc"
+  toc   <- isJust <$> getMetadataField ident "toc"
   tocd <- (preview $ _Just . _Show) <$> getMetadataField ident "tocdepth"
   let
     r = defaultHakyllReaderOptions

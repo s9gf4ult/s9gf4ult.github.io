@@ -1,6 +1,6 @@
 ---
 title: NixOS config template considerations
-withtoc: true
+toc: true
 tocdepth: 3
 tags: nixos
 ---
@@ -12,11 +12,14 @@ Here is the summary of responses on both threads
 and
 [Reddit](https://www.reddit.com/r/NixOS/comments/eihw31/any_default_config_for_reproducible_configurations/)
 
-# Pinning the base nixpkgs versions
+# Pros and cons
 
-The question is how to pin specific version in the NixOS config for reproducability.
+## Pinning the base nixpkgs versions
 
-## Use niv
+The question is how to pin specific version of nixpkgs in the NixOS
+config for reproducability and source code management.
+
+### Use niv
 
 Handle NixOS config just like usual [niv](https://github.com/nmattia/niv) project
 
@@ -40,7 +43,9 @@ Handle NixOS config just like usual [niv](https://github.com/nmattia/niv) projec
   * Written in Haskell. Will pull some dependencies and have long
     compilation time.
 
-## Use flakes
+### Use flakes
+
+[flakes](https://gist.github.com/edolstra/40da6e3a4d4ee8fd019395365e0772e7)
 
 * Pros
   * Modularity and coposability of the flakes
@@ -48,8 +53,9 @@ Handle NixOS config just like usual [niv](https://github.com/nmattia/niv) projec
 * Cons
   * Very experimental and raw for now. May require patched `nix`
   * Requires all parts of your configuration to be flakes
+  * Not very lightweight for first user's config
 
-## Use git submodule to pin specific commit of nixpkgs
+### Use git submodule to pin specific commit of nixpkgs
 
 Fetch whole `nixpkgs` as git submodule and pin a commit hash in the
 config repository
@@ -62,19 +68,19 @@ config repository
   * Slow submodule update. Especially when last update was long time
     ago.
 
-# Pinning secondary nixpgs versions/overlays/source trees/other external repositories
+## Pinning secondary nixpgs versions/overlays/source trees/other external repositories
 
-## Use niv
+### Use niv
 
 Same as previous. Preferred way if main nixpkgs is already under `niv`
 management.
 
-## Use flakes
+### Use flakes
 
 Same as previous. Preferred way if main nixpkgs is already under
 `flakes` management.
 
-## fetchFromGitHub
+### fetchFromGitHub
 
 Use the program `nix-prefetch-github` to prefetch the secondary
 
@@ -104,9 +110,9 @@ Use the program `nix-prefetch-github` to prefetch the secondary
 
   not very convenient
 
-# Multiple machines configuration
+## Multiple machines configuration
 
-## Use imports section
+### Use imports section
 
 Create some top-level files like `host1.nix`, `host2.nix`
 with `imports` section, like
@@ -130,7 +136,7 @@ Update the system with `nixos-rebuild switch`
   * Need to support manual imports
   * Possible code mess
 
-### Improvement
+#### Improvement
 
 May be improved by structured files tree. Like
 
@@ -175,24 +181,24 @@ So the `imports` section of each `hosts/hostX/default.nix` may look like
     ];
 ```
 
-## Use modules
+### Use modules
 
 To be honest, I did not find any pros comparing to previous one.
 
-# Managing secrets
-## git-crypt
+## Managing secrets
+### git-crypt
 
 * Pros
   * Claimed to be secure
 * Cons
   * May conflict with some ways of editing the config files
 
-## Manual copying the secrets to each machine
+### Manual copying the secrets to each machine
 
 * Cons
   * No way for centralized secret management
 
-# Editing the config files
+## Editing the config files
 
 The question is how to edit files in the `/etc/nixos`. The files are
 managed with `git` but you still need to push it to the github (and so
@@ -200,7 +206,7 @@ have keys loaded in your ssh agent or enter password every time). Also
 editing files as root is not very convenient and secure in case of GUI
 editors.
 
-## Edit directly as root user with vim/nano
+### Edit directly as root user with vim/nano
 
 * Pros
   * Simple
@@ -209,7 +215,7 @@ editors.
   * The root user usually dont have convenient dev tools in it's
     environment (and must do not)
 
-## Have a copy of the repository in a home of user
+### Have a copy of the repository in a home of user
 
 First you have some copy of your config somewhere in
 `/home/user/nixos-config` in which you make some changes, test them
@@ -235,7 +241,48 @@ then `nixos-rebuild switch` as root user
   * Excess space (and time to pull) for the `nixpkgs` submodule (if
     you use this way of pinning)
 
-## Symlink to folder in a user's home
-# Managing the home folder
+### Symlink to folder in a user's home
 
-Should be optional to use home-manager
+The `/etc/nixos/` is just a symbolic link to a `/home/user/nixos`.
+
+* Pros
+  * Simplicity
+* Cons
+  * Problems with secret management. Secrets will be readable by the
+    user.
+
+## Managing the home folder
+
+Do we need some home directory management in our nixos config?
+
+### Add home manager support from the scratch
+
+* Pros
+  * User will get used to using home manager from the begining.
+  * Automation
+* Cons
+  * Not lightweight config. User may not want to use home manager
+
+### Manaually
+
+* Pros
+  * Lightweight
+* Cons
+  * Additional work for home manager users
+
+# Decisions made
+
+### Pinning
+
+Pinning the nixpkgs (primary and secondary repos). Also pinning
+overlays and any other source repos related to config.
+
+Do it with [niv](https://github.com/nmattia/niv)
+
+### Multiple machines
+
+Direcroty structured config
+
+### Managing secrets
+
+git-crypt
