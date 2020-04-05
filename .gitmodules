@@ -1,0 +1,4 @@
+[submodule "site-result"]
+	path = site-result
+	url = git@github.com:s9gf4ult/s9gf4ult.github.io.git
+	branch = master
