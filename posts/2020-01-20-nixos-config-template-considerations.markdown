@@ -286,3 +286,11 @@ Direcroty structured config
 ### Managing secrets
 
 git-crypt
+
+### Editing config files
+
+Out of scope of the project
+
+### Managing home folder
+
+Manually. Or make a `home-manager` optional feature.
